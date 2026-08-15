@@ -1,7 +1,8 @@
 # QA Automation Practice Project (Playwright + Python)
 
-Following an 8-week study plan (see `Automation study plan` in Claude's plan history) to go from
-Python basics to job-ready QA automation skills.
+[![Tests](https://github.com/lal29/Automation/actions/workflows/tests.yml/badge.svg)](https://github.com/lal29/Automation/actions/workflows/tests.yml)
+
+Following a self-directed study plan to go from Python basics to job-ready QA automation skills.
 
 ## Week 1: Environment setup
 
@@ -21,16 +22,28 @@ pip install -r requirements.txt
 playwright install
 ```
 
-Once that's done, tell Claude and we'll write the first test together.
-
-## Project layout (grows week by week)
+## Project layout
 
 ```
 Automation/
-  requirements.txt   # Python dependencies
+  .github/workflows/tests.yml   # CI: runs the suite on every push/PR
+  requirements.txt              # Python dependencies
+  pytest.ini                    # pytest config (makes pages/ importable from tests/)
   .gitignore
   README.md
-  tests/              # pytest test files (added Week 2+)
-  pages/              # Page Object Model classes (added Week 4+)
-  conftest.py         # shared pytest fixtures (added Week 2+)
+  pages/                        # Page Object Model classes
+    login_page.py
+    inventory_page.py
+    checkout_page.py
+    checkout_info_page.py
+    checkout_overview.py
+    checkout_complete_page.py
+  tests/                        # pytest test files
+    conftest.py                 # shared fixtures (login, storage state, API context)
+    test_login.py
+    test_inventory.py
+    test_checkout.py
+    test_api.py
+    test_network_mocking.py
+    data/                       # externalized test case data (JSON)
 ```
