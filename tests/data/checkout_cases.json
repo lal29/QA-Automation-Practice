@@ -1,0 +1,9 @@
+[
+  ["", "", "", "Error: First Name is required"],
+  ["Lal", "", "", "Error: Last Name is required"],
+  ["Lal", "Lucero", "", "Error: Postal Code is required"],
+  ["", "", "V6S 6Z4", "Error: First Name is required"],
+  ["Lal", "", "V6S 6Z4", "Error: Last Name is required"],
+  ["", "Lucero", "V6S 6Z4", "Error: First Name is required"],
+  ["Lal", "Lucero", "V6S 6Z4", null]
+]
