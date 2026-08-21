@@ -1,3 +1,4 @@
+import os
 from playwright.sync_api import Page
 
 
@@ -10,7 +11,7 @@ class LoginPage:
         self.error_message = page.locator('[data-test="error"]')
 
     def goto(self):
-        self.page.goto("https://www.saucedemo.com/")
+        self.page.goto(os.getenv("BASE_URL"))
 
     def login(self, username: str, password: str):
         self.username_input.fill(username)

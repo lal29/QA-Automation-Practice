@@ -3,10 +3,16 @@ from playwright.sync_api import Page, expect
 from pages.login_page import LoginPage
 from pathlib import Path
 
-LOGIN_CASES = json.loads(
+RAW_CASES = json.loads(
     (Path(__file__).parent / "data" / "login_cases.json").read_text()
 )
 
+LOGIN_CASES = [
+    pytest.param(
+        *case, marks=pytest.mark.smoke if case[2] is None else pytest.mark.regression
+    )
+    for case in RAW_CASES
+]
 
 
 @pytest.mark.parametrize("username, password, expected_error", LOGIN_CASES)

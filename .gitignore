@@ -6,4 +6,5 @@ test-results/
 playwright-report/
 .env
 NOTES.md
+STUDY_PLAN.md
 tests/storage_state.json
