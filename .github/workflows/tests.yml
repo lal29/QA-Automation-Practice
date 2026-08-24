@@ -30,7 +30,7 @@ jobs:
         run: playwright install --with-deps
 
       - name: "Run tests"
-        run: pytest tests/ --browser ${{ matrix.browser }} --junitxml=report.xml --html=report.html --self-contained-html
+        run: pytest tests/ --browser ${{ matrix.browser }} --junitxml=reportJUNIT.xml --html=reportHTML.html --self-contained-html
         env:
           BASE_URL: ${{ secrets.BASE_URL }}
           STANDARD_USER: ${{ secrets.STANDARD_USER }}
@@ -41,7 +41,7 @@ jobs:
         if: success() || failure()
         with:
           name: "Pytest Results (${{ matrix.browser }})"
-          path: reportDorny.xml
+          path: reportJUNIT.xml
           reporter: java-junit
 
       - name: "Upload junit test report"
