@@ -27,18 +27,25 @@ jobs:
         run: playwright install --with-deps
 
       - name: "Run tests"
-        run: pytest tests/ --browser ${{ matrix.browser }} --junitxml=report.xml
+        run: pytest tests/ --browser ${{ matrix.browser }} --junitxml=report.xml --html=report.html --self-contained-html
         env:
           BASE_URL: ${{ secrets.BASE_URL }}
           STANDARD_USER: ${{ secrets.STANDARD_USER }}
           STANDARD_PASSWORD: ${{ secrets.STANDARD_PASSWORD }}
 
-      - name: "Upload test report"
+      - name: "Upload junit test report"
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: junit-report-${{ matrix.browser }}
           path: report.xml
+
+      - name: "Upload HTML report"
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: html-report-${{ matrix.browser }}
+          path: report.html
 
       - name: "Upload failure artifacts"
         if: failure()
