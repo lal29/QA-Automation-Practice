@@ -7,6 +7,9 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        browser: [chromium, firefox, webkit]
     steps:
       - name: "Checkout code"
         uses: actions/checkout@v7
@@ -23,15 +26,22 @@ jobs:
         run: playwright install --with-deps
 
       - name: "Run tests"
-        run: pytest tests/
+        run: pytest tests/ --browser ${{ matrix.browser }} --junitxml=report.xml
         env:
           BASE_URL: ${{ secrets.BASE_URL }}
           STANDARD_USER: ${{ secrets.STANDARD_USER }}
           STANDARD_PASSWORD: ${{ secrets.STANDARD_PASSWORD }}
 
+      - name: "Upload test report"
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: junit-report-${{ matrix.browser }}
+          path: report.xml
+
       - name: "Upload failure artifacts"
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-traces
+          name: playwright-traces-${{ matrix.browser }}
           path: test-results/
