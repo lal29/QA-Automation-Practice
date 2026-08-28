@@ -8,8 +8,8 @@ load_dotenv()
 
 
 @pytest.fixture(scope="session")
-def storage_state_path(browser):
-    context = browser.new_context()
+def storage_state_path(browser, browser_context_args):
+    context = browser.new_context(**browser_context_args)
     page = context.new_page()
     login_page = LoginPage(page)
     login_page.goto()
@@ -21,8 +21,10 @@ def storage_state_path(browser):
 
 
 @pytest.fixture
-def logged_in_page(browser, storage_state_path):
-    context = browser.new_context(storage_state=storage_state_path)
+def logged_in_page(browser, storage_state_path, browser_context_args):
+    context = browser.new_context(
+        storage_state=storage_state_path, **browser_context_args
+    )
     page = context.new_page()
     InventoryPage(page).goto()
     yield page
@@ -36,3 +38,11 @@ def api_request_context(playwright):
     )
     yield request_context
     request_context.dispose()
+
+
+@pytest.fixture(scope="session")
+def browser_context_args(browser_context_args, playwright):
+    device_name = os.getenv("DEVICE")
+    if device_name:
+        return {**browser_context_args, **playwright.devices[device_name]}
+    return browser_context_args

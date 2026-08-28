@@ -13,7 +13,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        browser: [chromium, firefox, webkit]
+        include:
+          - browser: chromium
+            label: chromium
+          - browser: firefox
+            label: firefox
+          - browser: webkit
+            label: webkit
+          - browser: webkit
+            label: mobile-iphone13
+            device: "iPhone 13"
     steps:
       - name: "Checkout code"
         uses: actions/checkout@v7
@@ -35,12 +44,13 @@ jobs:
           BASE_URL: ${{ secrets.BASE_URL }}
           STANDARD_USER: ${{ secrets.STANDARD_USER }}
           STANDARD_PASSWORD: ${{ secrets.STANDARD_PASSWORD }}
+          DEVICE: ${{ matrix.device }}
 
       - name: "Publish test report using dorny"
         uses: dorny/test-reporter@v1
         if: success() || failure()
         with:
-          name: "Pytest Results (${{ matrix.browser }})"
+          name: "Pytest Results (${{ matrix.label }})"
           path: reportJUNIT.xml
           reporter: java-junit
 
@@ -48,19 +58,19 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: junit-report-${{ matrix.browser }}
+          name: junit-report-${{ matrix.label }}
           path: reportJUNIT.xml
 
       - name: "Upload HTML report"
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: html-report-${{ matrix.browser }}
+          name: html-report-${{ matrix.label }}
           path: reportHTML.html
 
       - name: "Upload failure artifacts"
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-traces-${{ matrix.browser }}
+          name: playwright-traces-${{ matrix.label }}
           path: test-results/
