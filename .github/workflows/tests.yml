@@ -25,6 +25,9 @@ jobs:
             label: mobile-iphone13
             device: "iPhone 13"
     steps:
+      - name: "Checkout code"
+        uses: actions/checkout@v7
+
       - name: "Setup project"
         uses: ./.github/actions/setup-project/
 
