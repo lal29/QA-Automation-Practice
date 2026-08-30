@@ -30,6 +30,8 @@ jobs:
 
       - name: "Setup project"
         uses: ./.github/actions/setup-project/
+        with:
+          browser: ${{ matrix.browser }}
 
       - name: "Run tests"
         run: pytest tests/ --browser ${{ matrix.browser }} --junitxml=reportJUNIT.xml --html=reportHTML.html --self-contained-html
@@ -79,6 +81,8 @@ jobs:
 
       - name: "Setup project"
         uses: ./.github/actions/setup-project/
+        with:
+          browser: chromium
 
       - name: "Update visual snapshots"
         run: pytest tests/test_visual.py --update-snapshots || true

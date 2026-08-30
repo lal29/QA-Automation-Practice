@@ -1,5 +1,9 @@
 name: "Setup Python and Playwright"
 description: "Checkout code, setup Python, install dependencies and Playwright browsers"
+inputs:
+  browser:
+    description: "Which browser to install"
+    required: true
 runs:
   using: "composite"
   steps:
@@ -13,5 +17,5 @@ runs:
       shell: bash
 
     - name: "Install Playwright browsers"
-      run: playwright install --with-deps
+      run: playwright install --with-deps ${{ inputs.browser }}
       shell: bash
