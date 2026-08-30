@@ -74,6 +74,9 @@ jobs:
       checks: write
       contents: write
     steps:
+      - name: "Checkout code"
+        uses: actions/checkout@v7
+
       - name: "Setup project"
         uses: ./.github/actions/setup-project/
 
