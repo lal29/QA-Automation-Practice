@@ -1,0 +1,20 @@
+name: "Setup Python and Playwright"
+description: "Checkout code, setup Python, install dependencies and Playwright browsers"
+runs:
+  using: "composite"
+  steps:
+    - name: "Checkout code"
+      uses: actions/checkout@v7
+
+    - name: "Setup python"
+      uses: actions/setup-python@v7
+      with:
+        python-version: "3.12"
+
+    - name: "Install dependencies"
+      run: pip install -r requirements.txt
+      shell: bash
+
+    - name: "Install Playwright browsers"
+      run: playwright install --with-deps
+      shell: bash

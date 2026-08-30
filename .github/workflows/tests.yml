@@ -3,6 +3,7 @@ name: Test
 on:
   push:
   pull_request:
+  workflow_dispatch:
 
 jobs:
   test:
@@ -24,19 +25,8 @@ jobs:
             label: mobile-iphone13
             device: "iPhone 13"
     steps:
-      - name: "Checkout code"
-        uses: actions/checkout@v7
-
-      - name: "Setup python"
-        uses: actions/setup-python@v7
-        with:
-          python-version: "3.12"
-
-      - name: "Install dependencies"
-        run: pip install -r requirements.txt
-
-      - name: "Install Playwright browsers"
-        run: playwright install --with-deps
+      - name: "Setup project"
+        uses: ./.github/actions/setup-project/
 
       - name: "Run tests"
         run: pytest tests/ --browser ${{ matrix.browser }} --junitxml=reportJUNIT.xml --html=reportHTML.html --self-contained-html
@@ -74,3 +64,25 @@ jobs:
         with:
           name: playwright-traces-${{ matrix.label }}
           path: test-results/
+  update-visual-snapshots:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      contents: write
+    steps:
+      - name: "Setup project"
+        uses: ./.github/actions/setup-project/
+
+      - name: "Update visual snapshots"
+        run: pytest tests/test_visual.py --update-snapshots || true
+        env:
+          BASE_URL: ${{ secrets.BASE_URL }}
+
+      - name: "Commit updated snapshots"
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add tests/visual_snapshots/
+          git diff --staged --quiet || git commit -m "Update visual regression baselines"
+          git push

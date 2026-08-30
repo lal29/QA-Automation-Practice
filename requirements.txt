@@ -4,3 +4,4 @@ playwright
 pytest-rerunfailures
 python-dotenv
 pytest-html
+pytest-playwright-visual-snapshot
