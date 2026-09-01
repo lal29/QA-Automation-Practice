@@ -76,6 +76,16 @@ jobs:
     permissions:
       checks: write
       contents: write
+    strategy:
+      max-parallel: 1
+      matrix:
+        include:
+          - browser: chromium
+            label: chromium
+          - browser: webkit
+            label: mobile-iphone13
+            device: "iPhone 13"
+
     steps:
       - name: "Checkout code"
         uses: actions/checkout@v7
@@ -83,17 +93,18 @@ jobs:
       - name: "Setup project"
         uses: ./.github/actions/setup-project/
         with:
-          browser: chromium
+          browser: ${{ matrix.browser }}
 
       - name: "Update visual snapshots"
-        run: pytest tests/test_visual.py --update-snapshots || true
+        run: pytest tests/test_visual.py --browser ${{ matrix.browser }} --update-snapshots || true
         env:
           BASE_URL: ${{ secrets.BASE_URL }}
+          DEVICE: ${{ matrix.device }}
 
       - name: "Commit updated snapshots"
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add tests/visual_snapshots/
-          git diff --staged --quiet || git commit -m "Update visual regression baselines"
+          git diff --staged --quiet || git commit -m "Update visual regression baselines ${{ matrix.label}}"
           git push

@@ -4,6 +4,7 @@ __pycache__/
 .pytest_cache/
 test-results/
 playwright-report/
+tests/visual_snapshots/failures/
 .env
 NOTES.md
 STUDY_PLAN.md
